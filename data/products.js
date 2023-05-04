@@ -1234,3 +1234,5 @@ const products = [
 export default products;
 
 // EXPLICIT CATEGORIES: fashion clothes, clothes, cameras, phones, laptops, watches, monitors, electronics, tablets, ipad, headphones, shoes
+
+// to add: flash sales and discount %, fast selling, top products, new products add bluetooth speaker, featured products,  iphone 14 series
