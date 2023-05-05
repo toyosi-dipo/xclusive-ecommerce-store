@@ -9,9 +9,9 @@ function NavBar() {
       <nav className="border-b pb-4 pt-10">
         <div className="global-container flex items-center justify-between">
           {/* Logo */}
-          <div className="font-inter text-2xl font-bold" rel="logo">
+          <Link href={"/"} className="font-inter text-2xl font-bold" rel="logo">
             Xclusive
-          </div>
+          </Link>
 
           {/* Nav Links */}
           <ul className="hidden items-center gap-6 lg:flex xl:gap-12">
@@ -32,7 +32,7 @@ function NavBar() {
             </div>
             <div className="flex items-center gap-4 text-3xl">
               <Link href="/wishlist">
-                <HeartIcon className="duration-300 hover:text-text1" />
+                <HeartIcon className="fill-none duration-300 hover:text-text1" />
               </Link>
               <Link href="/cart">
                 <CartIcon className="duration-300 hover:text-text1" />

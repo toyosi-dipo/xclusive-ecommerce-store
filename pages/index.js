@@ -97,7 +97,7 @@ export default function Home() {
             </div>
 
             {/* Flash sales products */}
-            <div className="mb-14 place-items-center gap-4 gap-y-4 space-y-4 sm:grid sm:grid-cols-2 sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
+            <div className="mb-14 place-items-center gap-4 gap-y-4 space-y-10 sm:grid sm:grid-cols-2 sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
               <SingleProductDiscounted />
               <SingleProductDiscounted />
               <SingleProductDiscounted />

@@ -1,22 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   CartIcon,
   HeartIcon,
   StarFullyFilledIcon,
   StarHalfFilledIcon,
+  TrashIcon,
 } from "../assets/icons";
 
-function SingleProductDiscounted() {
+function SingleProduct() {
+  const router = useRouter();
+  const isWishlist = router.asPath === "/wishlist";
+
   return (
     <div className="relative mx-auto max-w-max flex-none sm:mx-0">
       {/* to do filling svg */}
       {/* icons */}
       <div
         className="absolute right-3 top-3 rounded-full bg-white fill-none p-1 text-2xl duration-300"
-        title="Add to wishlist"
+        title={isWishlist ? "Remove item" : "Add to wishlist"}
       >
-        <HeartIcon className="" />
+        {isWishlist ? <TrashIcon /> : <HeartIcon className="" />}
       </div>
       {/* to do invisible and pointer event none when not in cart */}
       <div
@@ -34,7 +39,8 @@ function SingleProductDiscounted() {
             src={"/images/cameras/pexels-pixabay-51383.jpg"}
             width={338}
             height={253}
-            className="rounded-lg object-cover"
+            alt={"camera"}
+            className="h-auto w-auto rounded-lg object-cover"
           />
         </div>
 
@@ -80,4 +86,4 @@ function SingleProductDiscounted() {
   );
 }
 
-export default SingleProductDiscounted;
+export default SingleProduct;

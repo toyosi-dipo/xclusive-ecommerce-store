@@ -26,6 +26,10 @@
   @apply mb-10 items-center gap-8 sm:flex md:gap-20;
 }
 
+.product-shadow {
+  box-shadow: 0px 1px 13px rgba(0, 0, 0, 0.05);
+}
+
 /* Hamburger Menu */
 .hamburger {
   @apply relative h-6 w-6 cursor-pointer duration-[250ms];
