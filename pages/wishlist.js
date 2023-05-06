@@ -2,9 +2,9 @@ import SingleProduct from "../components/SingleProduct";
 
 function Wishlist() {
   return (
-    <main className="mb-36 mt-14">
+    <main className="mb-36 mt-20">
       <div className="global-container">
-        <div className="mb-14 flex flex-wrap items-center justify-between gap-4">
+        <div className="mb-20 flex flex-wrap items-center justify-between gap-4">
           <p className="text-lg">Wishlist (4)</p>
           {/* to do - add all products to bag */}
           <button className="rounded border border-black/50 px-6 py-2 text-center duration-200 hover:border-yellow-200 hover:bg-yellow-200 sm:px-12 sm:py-4">
