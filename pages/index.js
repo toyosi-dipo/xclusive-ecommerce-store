@@ -5,6 +5,7 @@ import {
   ArrowUpIcon,
   CustomerServiceIcon,
   DeliveryServiceIcon,
+  SearchIcon,
   SecuredIcon,
 } from "../assets/icons";
 import FlashSalesTimerDigit from "../components/FlashSalesTimerDigit";
@@ -24,13 +25,24 @@ export default function Home() {
         {/* HERO SECTION*/}
         <section>
           <div className="global-container grid-cols-[auto_1fr] gap-11 md:grid">
-            {/* categories */}
-            {/* to do horizontal scrolling */}
-            <ul className="flex justify-between gap-2 pr-8 pt-10 md:block md:space-y-4 md:border-r lg:w-56">
-              {mainCategories.map((category, index) => (
-                <MainCategory key={index} {...category} />
-              ))}
-            </ul>
+            <div className="pt-10 md:border-r md:pr-8">
+              {/* Search box */}
+              <div className="mb-4 flex items-center gap-2 rounded bg-secondary px-3 text-xs sm:mb-5 sm:text-sm lg:hidden">
+                <input
+                  type="text"
+                  className="grow bg-transparent px-1 py-3 focus:outline-none md:max-w-[8rem]"
+                  placeholder="What are you looking for?"
+                />
+                <SearchIcon className="text-2xl" />
+              </div>
+
+              {/* categories */}
+              <ul className="flex justify-between gap-2 overflow-x-auto md:block md:space-y-4 lg:w-56">
+                {mainCategories.map((category, index) => (
+                  <MainCategory key={index} {...category} />
+                ))}
+              </ul>
+            </div>
 
             {/* Voucher */}
             <div className="mt-10 items-center justify-between gap-4 space-y-4 bg-black px-4 py-4 text-white md:flex md:space-y-0 lg:px-16">
@@ -50,6 +62,7 @@ export default function Home() {
                 <h3 className="text-4xl font-semibold leading-tight lg:text-5xl">
                   Up to 10% <br /> off Voucher
                 </h3>
+                {/* to do - link to single product directly */}
                 <Link
                   href={"/products"}
                   className="inline-flex items-center gap-2 hover:text-text1"
@@ -80,8 +93,8 @@ export default function Home() {
 
             {/* Heading and countdown timer container */}
             <div className="heading-container">
-              {/* to do left and right arrows */}
               <h3>Flash Sales</h3>
+              {/* to do - countdown timer */}
               {/* Countdown timer */}
               <div className="mt-5 flex items-end gap-4">
                 <FlashSalesTimerDigit parameter={"Days"} value={"00"} />
@@ -104,6 +117,7 @@ export default function Home() {
               <SingleProductDiscounted />
             </div>
 
+            {/* to do - go to product page, filter out all flash sales */}
             <Link href="/products" className="btn2 mx-auto">
               View All Products
             </Link>
@@ -116,12 +130,11 @@ export default function Home() {
             <SectionTag tag="Categories" />
 
             <div className="heading-container">
-              {/* to do left and right arrows */}
               <h3>Browse By Category</h3>
             </div>
 
             {/* Sub categories container */}
-            <div className="flex justify-between gap-8">
+            <div className="flex justify-between gap-8 overflow-x-auto">
               {subCategories.map((subC, index) => (
                 <SubCategory key={index} {...subC} />
               ))}
@@ -148,7 +161,10 @@ export default function Home() {
               <SingleProduct />
               <SingleProduct />
             </div>
-            {/* to do add view all button for mobile screens only */}
+            {/* view all link for smaller screens only */}
+            <Link href={"/products"} className="btn2 mx-auto sm:hidden">
+              View All
+            </Link>
           </div>
         </section>
 
@@ -170,6 +186,7 @@ export default function Home() {
                   <LtdOfferTimerDigit parameter={"Seconds"} value={"00"} />
                 </div>
 
+                {/* go to single product */}
                 <Link
                   href={"/products"}
                   className="inline-block rounded bg-button1 px-12 py-4 text-text duration-300 hover:bg-hoverButton1"
@@ -200,6 +217,7 @@ export default function Home() {
             <h3 className="mb-14">Explore Our Products</h3>
 
             {/* products container */}
+            {/* to do - filter out only top products */}
             <div className="mb-14 grid-cols-2 place-items-center gap-4 gap-y-14 space-y-4 sm:grid sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
               <SingleProduct />
               <SingleProduct />

@@ -6,14 +6,14 @@ export default function NavLink({ href, title }) {
 
   return (
     <li className="group">
-      <Link href={href} className={`mb-1 inline-block px-2 hover:text-text1`}>
-        {title}
+      <Link href={href} className={`hover:text-text1`}>
+        <span className="inline-block px-2 pb-1">{title}</span>
+        <div
+          className={`h-1 bg-black duration-200 group-hover:w-full ${
+            pageRoute === href ? "w-full" : "w-0"
+          }`}
+        ></div>
       </Link>
-      <div
-        className={`h-1 bg-black duration-200 group-hover:w-full ${
-          pageRoute === href ? "w-full" : "w-0"
-        }`}
-      ></div>
     </li>
   );
 }

@@ -45,7 +45,7 @@ function SingleProductDiscounted() {
       </p>
 
       {/* product details container */}
-      <Link href={"/"} className="">
+      <Link href={"/products/13"} className="">
         {/* image container */}
         <div className="max-h-[253px] max-w-[338px]">
           <Image
@@ -60,12 +60,14 @@ function SingleProductDiscounted() {
         {/* product content */}
         <div className="mt-4">
           <div className="flew-wrap mb-2 flex justify-between gap-4">
-            <h4 className="text-lg font-semibold">Name of product</h4>
+            <h4 className="text-lg font-semibold text-gray-600">
+              Name of product
+            </h4>
             {/* to do dynamic calc */}
             {/* price of product */}
             <h4 className="flex gap-4 text-xl font-bold text-secondary2">
               $350
-              <span className="font-medium text-black/50 line-through decoration-black/50">
+              <span className="text-lg font-medium text-black/50 line-through decoration-black/50">
                 $500
               </span>
             </h4>

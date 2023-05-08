@@ -16,7 +16,9 @@ function Footer() {
         <div className="mb-14 grid justify-center gap-4  gap-y-8  sm:grid-cols-2 sm:justify-between md:grid-cols-3 xl:grid-cols-5">
           {/* grid item 1 */}
           <div className="space-y-6 ">
-            <h4 className="font-inter text-2xl font-bold">Xclusive</h4>
+            <Link href={"/"} className="font-inter text-2xl font-bold">
+              Xclusive
+            </Link>
             <p className="text-xl font-medium">Subscribe</p>
             <p>Get 10% off your first order</p>
             <div className="mx-auto mt-4 flex max-w-max items-center gap-2 rounded border border-text px-4 sm:mx-0">
@@ -47,16 +49,16 @@ function Footer() {
                 <Link href={"/#"}>My Account</Link>
               </li>
               <li>
-                <Link href={"/#"}>Login / Register</Link>
+                <Link href={"/login"}>Login / Register</Link>
               </li>
               <li>
-                <Link href={"/#"}>Cart</Link>
+                <Link href={"/cart"}>Cart</Link>
               </li>
               <li>
-                <Link href={"/#"}>Wishlist</Link>
+                <Link href={"/wishlist"}>Wishlist</Link>
               </li>
               <li>
-                <Link href={"/#"}>Shop</Link>
+                <Link href={"/products"}>Shop</Link>
               </li>
             </ul>
           </div>
@@ -75,7 +77,7 @@ function Footer() {
                 <Link href={"/#"}>FAQ</Link>
               </li>
               <li>
-                <Link href={"/#"}>Contact</Link>
+                <Link href={"/contact"}>Contact</Link>
               </li>
             </ul>
           </div>

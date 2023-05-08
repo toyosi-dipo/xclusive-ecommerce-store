@@ -9,7 +9,14 @@ import {
   TrashIcon,
 } from "../assets/icons";
 
-function SingleProduct() {
+function SingleProduct({
+  imageUrl,
+  name,
+  price,
+  rating,
+  reviewsCount,
+  _id: id,
+}) {
   const router = useRouter();
   const isWishlist = router.asPath === "/wishlist";
 
@@ -32,7 +39,7 @@ function SingleProduct() {
       </div>
 
       {/* product details container */}
-      <Link href={"/"} className="">
+      <Link href={"/products/13"} className="">
         {/* image container */}
         <div className="max-h-[15.8125rem] max-w-[21.125rem]">
           <Image
@@ -47,7 +54,9 @@ function SingleProduct() {
         {/* product content */}
         <div className="mt-4">
           <div className="flew-wrap mb-2 flex justify-between gap-4">
-            <h4 className="text-lg font-semibold">Name of product</h4>
+            <h4 className="text-lg font-semibold text-gray-600">
+              Name of product
+            </h4>
             {/* to do dynamic calc */}
             {/* price of product */}
             <h4 className="text-xl font-bold text-secondary2">$350</h4>
