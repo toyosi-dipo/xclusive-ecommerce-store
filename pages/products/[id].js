@@ -6,6 +6,7 @@ import {
   StarHalfFilledIcon,
 } from "../../assets/icons";
 import products from "../../data/products";
+import formatPrice from "../../utils/formatPrice";
 
 export function getServerSideProps({ req, res }) {
   const thisProduct = products[13];
@@ -25,7 +26,6 @@ export function getServerSideProps({ req, res }) {
 
 function SingleProductPage({
   name,
-  categories,
   price,
   rating,
   reviewsCount,
@@ -61,24 +61,31 @@ function SingleProductPage({
 
             <div className="mb-4 flex items-center gap-2 text-lg">
               {/* rating */}
-              {/* to do - dynamic stars */}
               {/* stars container */}
               <div className="flex">
-                <span>
-                  <StarFullyFilledIcon />
-                </span>
-                <span>
-                  <StarFullyFilledIcon />
-                </span>
-                <span>
-                  <StarFullyFilledIcon />
-                </span>
-                <span>
-                  <StarFullyFilledIcon />
-                </span>
-                <span>
-                  <StarHalfFilledIcon />
-                </span>
+                {Array.from({ length: 5 }, (_, index) => {
+                  if (rating >= index + 1) {
+                    return (
+                      <span>
+                        <StarFullyFilledIcon />
+                      </span>
+                    );
+                  }
+                  if (rating < index + 1 && rating >= index + 0.5) {
+                    return (
+                      <span>
+                        <StarHalfFilledIcon />
+                      </span>
+                    );
+                  }
+                  if (rating < index + 1) {
+                    return (
+                      <span>
+                        <StarEmptyIcon />
+                      </span>
+                    );
+                  }
+                })}
               </div>
               {/* count */}
               <p className="text-lg text-black/50">{`(${reviewsCount} Reviews)`}</p>
@@ -86,7 +93,7 @@ function SingleProductPage({
             </div>
 
             {/* to do - use international number format */}
-            <p className="mb-6 text-2xl">${price / 100}</p>
+            <p className="mb-6 text-2xl">{formatPrice(price)}</p>
             {/* product description */}
             <p className="mb-10">{description}</p>
             <hr className="mb-10 w-full border border-black/50" />

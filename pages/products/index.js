@@ -3,8 +3,23 @@ import MainCategory from "../../components/MainCategory";
 import SingleProduct from "../../components/SingleProduct";
 import { mainCategories } from "../../data/categories";
 import products from "../../data/products";
+import shuffleArray from "../../utils/shuffleArray";
 
-function Products() {
+export async function getServerSideProps(params) {
+  let allProducts;
+  //   try {
+  //     allProducts = await getAllProducts();
+  //   } catch (error) {
+  //     return {
+  //       notFound: true,
+  //     };
+  //   }
+
+  allProducts = products;
+  return { props: { allProducts } };
+}
+
+function Products({ allProducts }) {
   return (
     <main className="mb-36 mt-10 sm:mt-20">
       <div className="global-container">
@@ -65,7 +80,8 @@ function Products() {
           <div className="">
             <div className="mb-6 items-center gap-1 sm:flex">
               <p className="mb-3 sm:mb-0">
-                <span className="font-semibold">40</span> items found
+                <span className="font-semibold">{products.length}</span> items
+                found
               </p>
               <hr className="hidden grow border sm:block" />
 
@@ -80,8 +96,8 @@ function Products() {
               </label>
             </div>
             <div className="mb-14 grid-cols-2 place-items-center gap-4 gap-y-14 space-y-10 sm:grid sm:space-y-0 lg:grid-cols-3">
-              {products.map((product, index) => (
-                <SingleProduct key={index} />
+              {allProducts.map((product, index) => (
+                <SingleProduct key={index} {...product} />
               ))}
             </div>
           </div>

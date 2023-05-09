@@ -4,24 +4,37 @@ import { useRouter } from "next/router";
 import {
   CartIcon,
   HeartIcon,
+  StarEmptyIcon,
+  StarEmptyICon,
   StarFullyFilledIcon,
   StarHalfFilledIcon,
   TrashIcon,
 } from "../assets/icons";
+import formatPrice from "../utils/formatPrice";
 
 function SingleProduct({
-  imageUrl,
+  _id: id,
   name,
   price,
   rating,
   reviewsCount,
-  _id: id,
+  imageUrl,
+  newProduct,
+  discount,
 }) {
   const router = useRouter();
   const isWishlist = router.asPath === "/wishlist";
 
+  // reducing the length of product name above a certain level
+  let newName;
+  if (discount) {
+    newName = name.length > 15 ? `${name.slice(0, 15)}...` : name;
+  } else {
+    newName = name.length > 25 ? `${name.slice(0, 25)}...` : name;
+  }
+
   return (
-    <div className="relative mx-auto max-w-max flex-none sm:mx-0">
+    <div className="relative mx-auto w-[20rem] max-w-full sm:mx-0">
       {/* to do filling svg */}
       {/* icons */}
       <div
@@ -38,53 +51,83 @@ function SingleProduct({
         <CartIcon className="" />
       </div>
 
+      {/* discount */}
+      {discount && (
+        <p className="absolute left-3 top-3 rounded bg-secondary2 px-3 py-1 text-xs text-text">
+          {`-${discount * 100}%`}
+        </p>
+      )}
+      {newProduct && (
+        <p
+          className={`absolute left-3 rounded bg-button1 px-3 py-1 text-sm font-semibold text-text ${
+            discount ? "top-10" : "top-3"
+          }`}
+        >
+          New
+        </p>
+      )}
       {/* product details container */}
-      <Link href={"/products/13"} className="">
+      <Link href={"/products/" + id} className="">
         {/* image container */}
-        <div className="max-h-[15.8125rem] max-w-[21.125rem]">
+        <div className="h-[12.8125rem]">
           <Image
-            src={"/images/cameras/pexels-pixabay-51383.jpg"}
+            src={imageUrl}
             width={338}
             height={253}
             alt={"camera"}
-            className="h-auto w-auto rounded-lg object-cover"
+            className="h-full w-full rounded-lg object-cover"
           />
         </div>
 
-        {/* product content */}
+        {/* product content 14 and 23 */}
         <div className="mt-4">
-          <div className="flew-wrap mb-2 flex justify-between gap-4">
-            <h4 className="text-lg font-semibold text-gray-600">
-              Name of product
+          <div className="mb-2 grid grid-cols-[1fr_auto] items-center justify-between gap-1">
+            <h4 className="whitespace-nowrap font-semibold text-gray-600">
+              {newName}
             </h4>
-            {/* to do dynamic calc */}
+
             {/* price of product */}
-            <h4 className="text-xl font-bold text-secondary2">$350</h4>
+            <h4 className="flex gap-4 text-xl font-bold text-secondary2">
+              {formatPrice(price, discount)}
+              {discount && (
+                <span className="text-lg font-medium text-black/50 line-through decoration-black/50">
+                  {formatPrice(price)}
+                </span>
+              )}
+            </h4>
           </div>
-          {/* to do dynamic calc */}
+
           {/* ratings container */}
           <div className="flex items-center gap-2 text-lg">
             {/* rating */}
             {/* stars container */}
             <div className="flex">
-              <span>
-                <StarFullyFilledIcon />
-              </span>
-              <span>
-                <StarFullyFilledIcon />
-              </span>
-              <span>
-                <StarFullyFilledIcon />
-              </span>
-              <span>
-                <StarFullyFilledIcon />
-              </span>
-              <span>
-                <StarHalfFilledIcon />
-              </span>
+              {Array.from({ length: 5 }, (_, index) => {
+                if (rating >= index + 1) {
+                  return (
+                    <span>
+                      <StarFullyFilledIcon />
+                    </span>
+                  );
+                }
+                if (rating < index + 1 && rating >= index + 0.5) {
+                  return (
+                    <span>
+                      <StarHalfFilledIcon />
+                    </span>
+                  );
+                }
+                if (rating < index + 1) {
+                  return (
+                    <span>
+                      <StarEmptyIcon />
+                    </span>
+                  );
+                }
+              })}
             </div>
             {/* count */}
-            <p className="text-lg font-bold text-black/50">(56)</p>
+            <p className="text-lg font-bold text-black/50">({reviewsCount})</p>
           </div>
         </div>
       </Link>

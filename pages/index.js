@@ -13,12 +13,26 @@ import LtdOfferTimerDigit from "../components/LtdOfferTimerDigit";
 import MainCategory from "../components/MainCategory";
 import SectionTag from "../components/SectionTag";
 import SingleProduct from "../components/SingleProduct";
-import SingleProductDiscounted from "../components/SingleProductDiscounted";
 import SubCategory from "../components/SubCategory";
 import { mainCategories, subCategories } from "../data/categories";
+import shuffleArray from "../utils/shuffleArray";
 import products from "../data/products";
+// import getAllProducts from "../utils/getAllProducts";
 
-export default function Home() {
+export async function getServerSideProps(params) {
+  //   let allProducts;
+  //   try {
+  //     allProducts = await getAllProducts();
+  //   } catch (error) {
+  //     return {
+  //       notFound: true,
+  //     };
+  //   }
+  const tempProducts = shuffleArray(products);
+  return { props: { tempProducts } };
+}
+
+export default function Home({ allProducts, tempProducts }) {
   return (
     <>
       <main className="relative">
@@ -111,10 +125,12 @@ export default function Home() {
 
             {/* Flash sales products */}
             <div className="mb-14 place-items-center gap-4 gap-y-4 space-y-10 sm:grid sm:grid-cols-2 sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
-              <SingleProductDiscounted />
-              <SingleProductDiscounted />
-              <SingleProductDiscounted />
-              <SingleProductDiscounted />
+              {tempProducts
+                .filter((product) => product.discount)
+                .slice(0, 4)
+                .map((product, index) => (
+                  <SingleProduct key={index} {...product} />
+                ))}
             </div>
 
             {/* to do - go to product page, filter out all flash sales */}
@@ -156,10 +172,12 @@ export default function Home() {
 
             {/* Best selling container */}
             <div className="mb-14 place-items-center gap-4 gap-y-14 space-y-4 sm:grid sm:grid-cols-2 sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
-              <SingleProduct />
-              <SingleProduct />
-              <SingleProduct />
-              <SingleProduct />
+              {tempProducts
+                .filter((product) => product.reviewsCount > 200)
+                .slice(0, 4)
+                .map((product, index) => (
+                  <SingleProduct key={index} {...product} />
+                ))}
             </div>
             {/* view all link for smaller screens only */}
             <Link href={"/products"} className="btn2 mx-auto sm:hidden">
@@ -219,14 +237,12 @@ export default function Home() {
             {/* products container */}
             {/* to do - filter out only top products */}
             <div className="mb-14 grid-cols-2 place-items-center gap-4 gap-y-14 space-y-4 sm:grid sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
-              <SingleProduct />
-              <SingleProduct />
-              <SingleProduct />
-              <SingleProduct />
-              <SingleProduct />
-              <SingleProduct />
-              <SingleProduct />
-              <SingleProduct />
+              {tempProducts
+                .filter((product) => product.topProduct)
+                .slice(0, 8)
+                .map((product, index) => (
+                  <SingleProduct key={index} {...product} />
+                ))}
             </div>
             <Link href="/products" className="btn2 mx-auto">
               View All Products
