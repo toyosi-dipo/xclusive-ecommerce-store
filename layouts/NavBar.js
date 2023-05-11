@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { CartIcon, HeartIcon, SearchIcon } from "../assets/icons";
 import NavLink from "../components/NavLink";
+import { useCartContext } from "../context/CartContext";
 import navLinks from "../data/navlinks";
 
 function NavBar() {
+  const { wishlist, cart } = useCartContext();
   return (
     <>
       <nav className="border-b pb-4 pt-10">
@@ -31,11 +33,25 @@ function NavBar() {
               <SearchIcon className="text-2xl" />
             </div>
             <div className="flex items-center gap-4 text-3xl">
-              <Link href="/wishlist">
-                <HeartIcon className="fill-none duration-300 hover:text-text1" />
+              <Link href="/wishlist" className="relative">
+                <p className="absolute right-0 top-0 grid  h-5 w-5 translate-x-1/4 place-items-center rounded-full bg-secondary2 text-xs font-semibold text-white">
+                  {wishlist.length}
+                </p>
+                <HeartIcon
+                  className={`duration-500 hover:text-text1 ${
+                    wishlist.length > 0 ? "fill-black" : "fill-none"
+                  }`}
+                />
               </Link>
-              <Link href="/cart">
-                <CartIcon className="duration-300 hover:text-text1" />
+              <Link href="/cart" className="relative">
+                <p className="absolute right-0 top-0 grid  h-5 w-5 translate-x-1/2 place-items-center rounded-full bg-secondary2 text-xs font-semibold text-white">
+                  {cart.length}
+                </p>
+                <CartIcon
+                  className={`duration-300 hover:text-text1 ${
+                    cart.length > 0 ? "fill-black" : "fill-none"
+                  }`}
+                />
               </Link>
               {/* to do put user icon here */}
             </div>

@@ -1,5 +1,4 @@
-const { MongoClient } = require("mongodb");
-import products from "../../data/products";
+import { MongoClient } from "mongodb";
 
 // Connection URL
 const url = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@cluster0.xfupj0y.mongodb.net/?retryWrites=true&w=majority`;

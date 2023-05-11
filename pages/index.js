@@ -15,24 +15,41 @@ import SectionTag from "../components/SectionTag";
 import SingleProduct from "../components/SingleProduct";
 import SubCategory from "../components/SubCategory";
 import { mainCategories, subCategories } from "../data/categories";
-import shuffleArray from "../utils/shuffleArray";
 import products from "../data/products";
-// import getAllProducts from "../utils/getAllProducts";
+import Error from "next/error";
+import { useEffect } from "react";
+import { useGlobalContext } from "../context/GlobalContext";
+// import {getAllProducts} from "../utils/getProducts";
+
+// START FROM cart PAGE NEXT
 
 export async function getServerSideProps(params) {
-  //   let allProducts;
+  let allProducts;
+  let isError = false;
   //   try {
   //     allProducts = await getAllProducts();
   //   } catch (error) {
-  //     return {
-  //       notFound: true,
-  //     };
+  //     console.log(error.message);
+  // isError = error.message;
   //   }
-  const tempProducts = shuffleArray(products);
-  return { props: { tempProducts } };
+
+  allProducts = products;
+  return { props: { allProducts, isError } };
 }
 
-export default function Home({ allProducts, tempProducts }) {
+export default function Home({ allProducts, isError }) {
+  const { setAllProducts } = useGlobalContext();
+
+  useEffect(() => {
+    if (!isError) {
+      setAllProducts(allProducts);
+    }
+  }, []);
+
+  if (isError) {
+    return <Error />;
+  }
+
   return (
     <>
       <main className="relative">
@@ -125,7 +142,7 @@ export default function Home({ allProducts, tempProducts }) {
 
             {/* Flash sales products */}
             <div className="mb-14 place-items-center gap-4 gap-y-4 space-y-10 sm:grid sm:grid-cols-2 sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
-              {tempProducts
+              {allProducts
                 .filter((product) => product.discount)
                 .slice(0, 4)
                 .map((product, index) => (
@@ -172,7 +189,7 @@ export default function Home({ allProducts, tempProducts }) {
 
             {/* Best selling container */}
             <div className="mb-14 place-items-center gap-4 gap-y-14 space-y-4 sm:grid sm:grid-cols-2 sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
-              {tempProducts
+              {allProducts
                 .filter((product) => product.reviewsCount > 200)
                 .slice(0, 4)
                 .map((product, index) => (
@@ -237,7 +254,7 @@ export default function Home({ allProducts, tempProducts }) {
             {/* products container */}
             {/* to do - filter out only top products */}
             <div className="mb-14 grid-cols-2 place-items-center gap-4 gap-y-14 space-y-4 sm:grid sm:space-y-0 md:grid-cols-3 lg:grid-cols-4">
-              {tempProducts
+              {allProducts
                 .filter((product) => product.topProduct)
                 .slice(0, 8)
                 .map((product, index) => (

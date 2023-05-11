@@ -1,6 +1,6 @@
 export function CartIcon(props) {
   return (
-    <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" {...props}>
+    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}>
       <path
         d="M11 27C11.5523 27 12 26.5523 12 26C12 25.4477 11.5523 25 11 25C10.4477 25 10 25.4477 10 26C10 26.5523 10.4477 27 11 27Z"
         stroke="currentColor"

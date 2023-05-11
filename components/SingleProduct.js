@@ -10,6 +10,7 @@ import {
   StarHalfFilledIcon,
   TrashIcon,
 } from "../assets/icons";
+import { useCartContext } from "../context/CartContext";
 import formatPrice from "../utils/formatPrice";
 
 function SingleProduct({
@@ -23,7 +24,17 @@ function SingleProduct({
   discount,
 }) {
   const router = useRouter();
-  const isWishlist = router.asPath === "/wishlist";
+  const {
+    cart,
+    wishlist,
+    addToCart,
+    removeFromCart,
+    wishlistHandler,
+    itemCartQuantityHandler,
+  } = useCartContext();
+  const isWishlistPage = router.asPath === "/wishlist";
+  const isInCart = cart.find((product) => product._id === id);
+  const isInWishlist = wishlist.find((product) => product._id === id);
 
   // reducing the length of product name above a certain level
   let newName;
@@ -34,19 +45,37 @@ function SingleProduct({
   }
 
   return (
-    <div className="relative mx-auto w-[20rem] max-w-full sm:mx-0">
+    <div className="relative mx-auto w-[20rem] max-w-full overflow-x-hidden sm:mx-0">
       {/* to do filling svg */}
       {/* icons */}
       <div
         className="absolute right-3 top-3 rounded-full bg-white fill-none p-1 text-2xl duration-300"
-        title={isWishlist ? "Remove item" : "Add to wishlist"}
+        title={
+          isWishlistPage
+            ? "Remove item"
+            : isInWishlist
+            ? "Remove from wishlish"
+            : "Add to wishlist"
+        }
       >
-        {isWishlist ? <TrashIcon /> : <HeartIcon className="" />}
+        {isWishlistPage ? (
+          <TrashIcon onClick={() => wishlistHandler(id)} />
+        ) : (
+          <HeartIcon
+            onClick={() => wishlistHandler(id)}
+            className={isInWishlist ? "fill-black" : ""}
+          />
+        )}
       </div>
       {/* to do invisible and pointer event none when not in cart */}
       <div
-        className="absolute right-3 top-14 rounded-full bg-white p-1 text-2xl duration-300"
-        title="Add to Cart"
+        className={`absolute right-3 top-14 rounded-full bg-white fill-black p-1 text-2xl duration-300 ${
+          isInCart
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+        title="remove from cart"
+        onClick={() => removeFromCart(id)}
       >
         <CartIcon className="" />
       </div>
@@ -87,10 +116,10 @@ function SingleProduct({
             </h4>
 
             {/* price of product */}
-            <h4 className="flex gap-4 text-xl font-bold text-secondary2">
+            <h4 className="flex gap-2 text-lg font-bold text-secondary2">
               {formatPrice(price, discount)}
               {discount && (
-                <span className="text-lg font-medium text-black/50 line-through decoration-black/50">
+                <span className="font-medium text-black/50 line-through decoration-black/50">
                   {formatPrice(price)}
                 </span>
               )}
@@ -105,21 +134,21 @@ function SingleProduct({
               {Array.from({ length: 5 }, (_, index) => {
                 if (rating >= index + 1) {
                   return (
-                    <span>
+                    <span key={index}>
                       <StarFullyFilledIcon />
                     </span>
                   );
                 }
                 if (rating < index + 1 && rating >= index + 0.5) {
                   return (
-                    <span>
+                    <span key={index}>
                       <StarHalfFilledIcon />
                     </span>
                   );
                 }
                 if (rating < index + 1) {
                   return (
-                    <span>
+                    <span key={index}>
                       <StarEmptyIcon />
                     </span>
                   );
@@ -131,9 +160,46 @@ function SingleProduct({
           </div>
         </div>
       </Link>
-      <button className="mt-2 block w-full rounded bg-black py-3 text-center text-text duration-300 hover:opacity-70">
-        Add to Cart
-      </button>
+      <div className="relative">
+        {/* add to cart button - disappear when item is in cart */}
+        <button
+          className={`mt-2 block w-full rounded bg-black py-3 text-center text-text duration-300 hover:opacity-70 ${
+            isInCart
+              ? "pointer-events-none opacity-0"
+              : "pointer-events-auto opacity-100"
+          }`}
+          onClick={() => addToCart(id)}
+        >
+          Add to Cart
+        </button>
+
+        {/* increase and decrease buttons container. Disappear when item not in cart  */}
+        <div
+          className={`absolute left-0 top-0 flex w-full items-center justify-between text-center text-text ${
+            isInCart
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
+          }`}
+          onClick={() => addToCart(id)}
+        >
+          <button
+            className="h-12 rounded bg-black px-3  text-2xl font-bold duration-300 hover:opacity-70 disabled:cursor-not-allowed disabled:opacity-30"
+            disabled={isInCart?.cartQuantity < 2 ? true : false}
+            onClick={() => itemCartQuantityHandler(id, "decrease")}
+          >
+            -
+          </button>
+          <p className="text-2xl font-semibold text-black">
+            {isInCart?.cartQuantity}
+          </p>
+          <button
+            className="h-12 rounded  bg-black px-3 text-2xl font-bold  duration-300 hover:opacity-70"
+            onClick={() => itemCartQuantityHandler(id, "increase")}
+          >
+            +
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

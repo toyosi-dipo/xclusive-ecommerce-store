@@ -1,7 +1,10 @@
 import Image from "next/image";
 import { ChevronDownIcon, ChevronRightIcon } from "../assets/icons";
+import { useCartContext } from "../context/CartContext";
+import formatPrice from "../utils/formatPrice";
 
-function CartItem() {
+function CartItem({ _id: id, name, price, imageUrl, discount }) {
+  const { removeFromCart } = useCartContext();
   return (
     <>
       {/* For Small screens */}
@@ -9,7 +12,7 @@ function CartItem() {
         {/* image  */}
         <div className="max-w-[14rem]">
           <Image
-            src={"/images/cameras/pexels-pixabay-51383.jpg"}
+            src={imageUrl}
             width={338}
             height={253}
             alt={"camera"}
@@ -18,14 +21,15 @@ function CartItem() {
         </div>
         {/* details */}
         <div className="flex flex-col justify-between gap-2">
-          <h4 className="font-bold">Name of product</h4>
-          <p className="text-base font-bold">$35.99</p>
+          <h4 className="font-bold">{name}</h4>
+          <p className="text-base font-bold">{formatPrice(price, discount)}</p>
           <div className="">
             {/* to do - out of stock */}
             <p className="text-sm font-bold text-black/60"></p>
             <button
               className="font-semibold text-button2 hover:text-hoverButton"
               title="Remove item"
+              onClick={() => removeFromCart(id)}
             >
               Remove
             </button>
@@ -53,7 +57,7 @@ function CartItem() {
           {/* image container */}
           <div className="h-full max-w-[5rem] lg:max-w-[7rem]">
             <Image
-              src={"/images/cameras/pexels-pixabay-51383.jpg"}
+              src={imageUrl}
               width={338}
               height={253}
               alt={"camera"}
@@ -62,10 +66,11 @@ function CartItem() {
           </div>
           {/* details */}
           <div className="">
-            <h4 className="">Name of Product</h4>
+            <h4 className="">{name}</h4>
             <button
               className="font-medium text-button2 hover:text-hoverButton"
               title="Remove item"
+              onClick={() => removeFromCart(id)}
             >
               Remove
             </button>
@@ -73,7 +78,7 @@ function CartItem() {
         </div>
 
         {/* grid item price */}
-        <p>$650</p>
+        <p>{formatPrice(price)}</p>
 
         {/* grid item quantity */}
         {/* buttons */}

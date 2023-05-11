@@ -1,18 +1,34 @@
-import reducer from "../utils/globalReducer";
+import reducer from "../utils/reducers/globalReducer";
+import { SET_ALL_PRODUCTS, UPDATE_RENDERED_PRODUCTS } from "./actions";
 
-const { createContext, useState, useReducer, useContext } = require("react");
+const { createContext, useReducer, useContext } = require("react");
 
 const GlobalContext = createContext();
 
-const initialState = { deji: "toyosi" };
+const initialState = {
+  allProducts: [],
+  productGroups: [],
+  renderedProducts: [],
+};
 
 function GlobalProvider({ children }) {
-  // use either useState or useReducer hook
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  // const [state, setState] = useState(initialState);
-  // const [state, dispatch] = useReducer(reducer, initialState);
+  function setAllProducts(allProducts) {
+    dispatch({ type: SET_ALL_PRODUCTS, payload: allProducts });
+  }
 
-  return <GlobalContext.Provider value={{}}>{children}</GlobalContext.Provider>;
+  function updateRenderedProducts(productGroup) {
+    dispatch({ type: UPDATE_RENDERED_PRODUCTS, payload: productGroup });
+  }
+
+  return (
+    <GlobalContext.Provider
+      value={{ ...state, setAllProducts, updateRenderedProducts }}
+    >
+      {children}
+    </GlobalContext.Provider>
+  );
 }
 
 export function useGlobalContext() {

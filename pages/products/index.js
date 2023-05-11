@@ -1,27 +1,51 @@
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { SearchIcon } from "../../assets/icons";
 import MainCategory from "../../components/MainCategory";
 import SingleProduct from "../../components/SingleProduct";
+import { useGlobalContext } from "../../context/GlobalContext";
 import { mainCategories } from "../../data/categories";
 import products from "../../data/products";
-import shuffleArray from "../../utils/shuffleArray";
+import { arrayOfArrays } from "../../utils/database/groupProducts";
 
-export async function getServerSideProps(params) {
-  let allProducts;
-  //   try {
-  //     allProducts = await getAllProducts();
-  //   } catch (error) {
-  //     return {
-  //       notFound: true,
-  //     };
-  //   }
+function Products() {
+  const router = useRouter();
+  const mainRef = useRef(null);
+  const [nextProductGroup, setNextProductGroup] = useState(1);
+  const {
+    allProducts,
+    productGroups,
+    renderedProducts,
+    updateRenderedProducts,
+  } = useGlobalContext();
 
-  allProducts = products;
-  return { props: { allProducts } };
-}
+  // if no product has been fetched
+  useEffect(() => {
+    if (allProducts.length < 1) {
+      router.push("/");
+    }
+  }, []);
 
-function Products({ allProducts }) {
+  // scroll handler
+  useEffect(() => {
+    function handleScroll() {
+      const { scrollHeight, offsetTop } = mainRef.current;
+
+      if (
+        window.scrollY + window.innerHeight >=
+        scrollHeight + offsetTop - 20
+      ) {
+        updateRenderedProducts(productGroups[nextProductGroup]);
+        setNextProductGroup(nextProductGroup + 1);
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [nextProductGroup]);
+
   return (
-    <main className="mb-36 mt-10 sm:mt-20">
+    <main ref={mainRef} className="mb-36 mt-10 sm:mt-20">
       <div className="global-container">
         <p className="mb-10 flex flex-wrap items-center gap-3 text-sm text-black/50">
           Home <span>/</span> <span className="text-black">Products</span>
@@ -80,8 +104,8 @@ function Products({ allProducts }) {
           <div className="">
             <div className="mb-6 items-center gap-1 sm:flex">
               <p className="mb-3 sm:mb-0">
-                <span className="font-semibold">{products.length}</span> items
-                found
+                <span className="font-semibold">{allProducts.length}</span>{" "}
+                items found
               </p>
               <hr className="hidden grow border sm:block" />
 
@@ -96,7 +120,7 @@ function Products({ allProducts }) {
               </label>
             </div>
             <div className="mb-14 grid-cols-2 place-items-center gap-4 gap-y-14 space-y-10 sm:grid sm:space-y-0 lg:grid-cols-3">
-              {allProducts.map((product, index) => (
+              {renderedProducts.map((product, index) => (
                 <SingleProduct key={index} {...product} />
               ))}
             </div>

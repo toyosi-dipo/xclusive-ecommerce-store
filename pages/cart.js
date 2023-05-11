@@ -1,7 +1,10 @@
 import Link from "next/link";
 import CartItem from "../components/CartItem";
+import { useCartContext } from "../context/CartContext";
 
 function Cart() {
+  const { cart } = useCartContext();
+
   return (
     <main className="mb-36 mt-10 sm:mt-20">
       <div className="global-container">
@@ -19,9 +22,9 @@ function Cart() {
             <h4>Subtotal</h4>
           </div>
 
-          <CartItem />
-          <CartItem />
-          <CartItem />
+          {cart.map((product, index) => (
+            <CartItem key={index} {...product} />
+          ))}
         </div>
 
         {/* Return to shop link */}

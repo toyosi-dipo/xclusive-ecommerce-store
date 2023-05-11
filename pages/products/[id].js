@@ -1,38 +1,60 @@
+import Error from "next/error";
 import Image from "next/image";
 import { useState } from "react";
 import {
   HeartIcon,
+  StarEmptyIcon,
   StarFullyFilledIcon,
   StarHalfFilledIcon,
 } from "../../assets/icons";
 import products from "../../data/products";
 import formatPrice from "../../utils/formatPrice";
+import { getSingleProduct } from "../../utils/getProducts";
 
-export function getServerSideProps({ req, res }) {
-  const thisProduct = products[13];
+export async function getServerSideProps({ params }) {
+  const productId = params.id;
+  let isError = false;
+  let thisProduct;
+
+  try {
+    thisProduct = await getSingleProduct(productId);
+  } catch (error) {
+    console.log(error.message);
+    isError = error.message;
+  }
 
   // making sure all product's properties can be serialized
   let tempProduct = {};
-  for (const key in thisProduct) {
-    if (thisProduct[key]) {
-      tempProduct[key] = thisProduct[key];
+  if (thisProduct) {
+    for (const key in thisProduct) {
+      if (thisProduct[key]) {
+        tempProduct[key] = thisProduct[key];
+      }
     }
   }
 
   return {
-    props: { ...tempProduct },
+    props: { tempProduct, isError },
   };
 }
 
-function SingleProductPage({
-  name,
-  price,
-  rating,
-  reviewsCount,
-  imageUrl,
-  description,
-}) {
+function SingleProductPage({ tempProduct, isError }) {
   const [tempQuantity, setTempQuantity] = useState(1);
+
+  if (isError) {
+    return <Error />;
+  }
+
+  const {
+    _id: id,
+    name,
+    price,
+    rating,
+    reviewsCount,
+    imageUrl,
+    description,
+    discount,
+  } = tempProduct;
 
   return (
     <main className="mb-36 mt-10 sm:mt-20">
@@ -93,7 +115,14 @@ function SingleProductPage({
             </div>
 
             {/* to do - use international number format */}
-            <p className="mb-6 text-2xl">{formatPrice(price)}</p>
+            <p className="mb-6 flex flex-wrap gap-4 text-2xl">
+              {formatPrice(price, discount)}
+              {discount && (
+                <span className=" text-black/50 line-through decoration-black/50">
+                  {formatPrice(price)}
+                </span>
+              )}
+            </p>
             {/* product description */}
             <p className="mb-10">{description}</p>
             <hr className="mb-10 w-full border border-black/50" />
