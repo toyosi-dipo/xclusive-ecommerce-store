@@ -1,9 +1,18 @@
 import Link from "next/link";
 import CartItem from "../components/CartItem";
 import { useCartContext } from "../context/CartContext";
+import formatPrice from "../utils/formatPrice";
 
 function Cart() {
   const { cart } = useCartContext();
+
+  const subTotal = cart.reduce((lastTotal, current) => {
+    const { price, cartQuantity, discount } = current;
+    const actualPrice = price - (price * discount || 0);
+    let subTotal = actualPrice * cartQuantity;
+
+    return lastTotal + subTotal;
+  }, 0);
 
   return (
     <main className="mb-36 mt-10 sm:mt-20">
@@ -52,13 +61,15 @@ function Cart() {
           <div className="w-full space-y-4 rounded border px-6 py-8 md:justify-self-end">
             <p className="text-lg font-medium">Cart Total</p>
             <div className="flex justify-between border-b pb-4">
-              <p className="">Subtotal:</p> <p className="">$1750</p>
+              <p className="">Subtotal:</p>
+              <p className="">{formatPrice(subTotal)}</p>
             </div>
             <div className="flex justify-between border-b pb-4">
               <p className="">Shipping:</p> <p className="">Free</p>
             </div>
             <div className="flex justify-between border-b pb-4">
-              <p className="">Total:</p> <p className="">$1750</p>
+              <p className="">Grand Total:</p>{" "}
+              <p className="">{formatPrice(subTotal)}</p>
             </div>
 
             <button className="btn2 w-full max-w-none">

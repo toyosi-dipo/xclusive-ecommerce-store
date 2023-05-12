@@ -30,7 +30,7 @@ function SingleProduct({
     addToCart,
     removeFromCart,
     wishlistHandler,
-    itemCartQuantityHandler,
+    cartItemQuantityHandler,
   } = useCartContext();
   const isWishlistPage = router.asPath === "/wishlist";
   const isInCart = cart.find((product) => product._id === id);
@@ -50,13 +50,7 @@ function SingleProduct({
       {/* icons */}
       <div
         className="absolute right-3 top-3 rounded-full bg-white fill-none p-1 text-2xl duration-300"
-        title={
-          isWishlistPage
-            ? "Remove item"
-            : isInWishlist
-            ? "Remove from wishlish"
-            : "Add to wishlist"
-        }
+        title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
       >
         {isWishlistPage ? (
           <TrashIcon onClick={() => wishlistHandler(id)} />
@@ -170,7 +164,7 @@ function SingleProduct({
           }`}
           onClick={() => addToCart(id)}
         >
-          Add to Cart
+          {isWishlistPage ? "Move to Cart" : "Add to Cart"}
         </button>
 
         {/* increase and decrease buttons container. Disappear when item not in cart  */}
@@ -185,7 +179,7 @@ function SingleProduct({
           <button
             className="h-12 rounded bg-black px-3  text-2xl font-bold duration-300 hover:opacity-70 disabled:cursor-not-allowed disabled:opacity-30"
             disabled={isInCart?.cartQuantity < 2 ? true : false}
-            onClick={() => itemCartQuantityHandler(id, "decrease")}
+            onClick={() => cartItemQuantityHandler(id, "decrease")}
           >
             -
           </button>
@@ -194,7 +188,7 @@ function SingleProduct({
           </p>
           <button
             className="h-12 rounded  bg-black px-3 text-2xl font-bold  duration-300 hover:opacity-70"
-            onClick={() => itemCartQuantityHandler(id, "increase")}
+            onClick={() => cartItemQuantityHandler(id, "increase")}
           >
             +
           </button>

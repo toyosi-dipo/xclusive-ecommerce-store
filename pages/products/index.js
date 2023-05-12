@@ -29,7 +29,7 @@ function Products() {
   // scroll handler
   useEffect(() => {
     function handleScroll() {
-      const { scrollHeight, offsetTop } = mainRef.current;
+      const { scrollHeight, offsetTop } = document.getElementById("main");
 
       if (
         window.scrollY + window.innerHeight >=
@@ -45,7 +45,7 @@ function Products() {
   }, [nextProductGroup]);
 
   return (
-    <main ref={mainRef} className="mb-36 mt-10 sm:mt-20">
+    <main className="mb-36 mt-10 sm:mt-20" id="main">
       <div className="global-container">
         <p className="mb-10 flex flex-wrap items-center gap-3 text-sm text-black/50">
           Home <span>/</span> <span className="text-black">Products</span>

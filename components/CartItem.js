@@ -3,25 +3,25 @@ import { ChevronDownIcon, ChevronRightIcon } from "../assets/icons";
 import { useCartContext } from "../context/CartContext";
 import formatPrice from "../utils/formatPrice";
 
-function CartItem({ _id: id, name, price, imageUrl, discount }) {
-  const { removeFromCart } = useCartContext();
+function CartItem({ _id: id, name, price, imageUrl, discount, cartQuantity }) {
+  const { removeFromCart, cartItemQuantityHandler } = useCartContext();
   return (
     <>
       {/* For Small screens */}
-      <div className="grid grid-cols-[1fr_1fr_auto] gap-2 md:hidden">
+      <div className="grid grid-cols-[auto_1fr_auto] gap-2 md:hidden">
         {/* image  */}
-        <div className="max-w-[14rem]">
+        <div className="h-32 w-40 xs:h-[10rem] xs:w-[14rem]">
           <Image
             src={imageUrl}
             width={338}
             height={253}
             alt={"camera"}
-            className="h-auto w-auto rounded-lg object-cover"
+            className="h-full w-full rounded-lg object-cover"
           />
         </div>
         {/* details */}
-        <div className="flex flex-col justify-between gap-2">
-          <h4 className="font-bold">{name}</h4>
+        <div className="flex flex-col gap-4 xs:gap-8">
+          <h4 className="mt-1 font-bold">{name}</h4>
           <p className="text-base font-bold">{formatPrice(price, discount)}</p>
           <div className="">
             {/* to do - out of stock */}
@@ -37,14 +37,21 @@ function CartItem({ _id: id, name, price, imageUrl, discount }) {
         </div>
         {/* buttons */}
         {/* grid item quantity */}
-        {/* buttons */}
         <div className="flex flex-col items-center justify-center gap-4">
           {/* increase button */}
-          <button className="rotate-180 rounded border border-black/30 p-1 text-2xl font-semibold text-button2 duration-200 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30">
+          <button
+            className="rotate-180 rounded border border-black/30 p-1 text-2xl font-semibold text-button2 duration-200 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30"
+            onClick={() => cartItemQuantityHandler(id, "increase")}
+          >
             <ChevronDownIcon />
           </button>
-          <p className="text-lg">01</p>
-          <button className="rounded border border-black/30 p-1 text-2xl font-semibold text-button2 duration-200 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30">
+          <p className="text-lg">{cartQuantity}</p>
+          {/* increase button */}
+          <button
+            className="rounded border border-black/30 p-1 text-2xl font-semibold text-button2 duration-200 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-black/30 disabled:hover:bg-transparent"
+            disabled={cartQuantity < 2 ? true : false}
+            onClick={() => cartItemQuantityHandler(id, "reduce")}
+          >
             <ChevronDownIcon />
           </button>
         </div>
@@ -55,13 +62,13 @@ function CartItem({ _id: id, name, price, imageUrl, discount }) {
         {/* grid item details */}
         <div className="flex place-items-center gap-5 self-start justify-self-start">
           {/* image container */}
-          <div className="h-full max-w-[5rem] lg:max-w-[7rem]">
+          <div className="h-20 w-20 lg:w-28">
             <Image
               src={imageUrl}
               width={338}
               height={253}
               alt={"camera"}
-              className="h-full w-auto object-cover"
+              className="h-full w-full object-cover"
             />
           </div>
           {/* details */}
@@ -78,27 +85,34 @@ function CartItem({ _id: id, name, price, imageUrl, discount }) {
         </div>
 
         {/* grid item price */}
-        <p>{formatPrice(price)}</p>
+        <p>{formatPrice(price, discount)}</p>
 
         {/* grid item quantity */}
         {/* buttons */}
         <div className="flex items-center gap-2">
           {/* Reduce button */}
-          <button className="rotate-180 rounded border border-black/30 p-1 text-2xl font-semibold text-button2 duration-200 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30">
+          <button
+            className="rotate-180 rounded border border-black/30 p-1 text-2xl font-semibold text-button2 duration-200 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-black/30 disabled:hover:bg-transparent"
+            disabled={cartQuantity < 2 ? true : false}
+            onClick={() => cartItemQuantityHandler(id, "reduce")}
+          >
             <ChevronRightIcon />
           </button>
 
           {/* Quantity */}
-          <p className="text-lg">01</p>
+          <p className="text-lg">{cartQuantity}</p>
 
           {/* Increase button */}
-          <button className="rounded border border-black/30 p-1 text-2xl font-semibold text-button2 duration-200 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30">
+          <button
+            className="rounded border border-black/30 p-1 text-2xl font-semibold text-button2 duration-200 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30"
+            onClick={() => cartItemQuantityHandler(id, "increase")}
+          >
             <ChevronRightIcon />
           </button>
         </div>
 
-        {/* grid item subtotal */}
-        <p>$650</p>
+        {/* grid item - subtotal */}
+        <p>{formatPrice(price * cartQuantity, discount)}</p>
       </div>
     </>
   );

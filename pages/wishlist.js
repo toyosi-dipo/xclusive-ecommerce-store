@@ -2,7 +2,7 @@ import SingleProduct from "../components/SingleProduct";
 import { useCartContext } from "../context/CartContext";
 
 function Wishlist() {
-  const { wishlist } = useCartContext();
+  const { wishlist, moveAllWishlistToCart } = useCartContext();
 
   return (
     <main className="mb-36 mt-20">
@@ -13,6 +13,7 @@ function Wishlist() {
           <button
             className="rounded border border-black/50 px-6 py-2 text-center duration-200 hover:border-yellow-200 hover:bg-yellow-200 disabled:cursor-not-allowed disabled:border-black/50 disabled:bg-transparent disabled:opacity-50 sm:px-12 sm:py-4"
             disabled={wishlist.length > 0 ? false : true}
+            onClick={moveAllWishlistToCart}
           >
             Move All To Bag
           </button>
