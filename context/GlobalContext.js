@@ -1,12 +1,18 @@
 import reducer from "../utils/reducers/globalReducer";
-import { SET_ALL_PRODUCTS, UPDATE_RENDERED_PRODUCTS } from "./actions";
+import {
+  FILTER_PRODUCTS_CATEGORY,
+  SET_ALL_PRODUCTS,
+  UPDATE_RENDERED_PRODUCTS,
+} from "./actions";
 
 const { createContext, useReducer, useContext } = require("react");
 
 const GlobalContext = createContext();
 
 const initialState = {
+  nextProductGroup: 1,
   allProducts: [],
+  filteredProducts: [],
   productGroups: [],
   renderedProducts: [],
 };
@@ -22,9 +28,18 @@ function GlobalProvider({ children }) {
     dispatch({ type: UPDATE_RENDERED_PRODUCTS, payload: productGroup });
   }
 
+  function filterProductsCategory(category) {
+    dispatch({ type: FILTER_PRODUCTS_CATEGORY, payload: category });
+  }
+
   return (
     <GlobalContext.Provider
-      value={{ ...state, setAllProducts, updateRenderedProducts }}
+      value={{
+        ...state,
+        setAllProducts,
+        updateRenderedProducts,
+        filterProductsCategory,
+      }}
     >
       {children}
     </GlobalContext.Provider>

@@ -1,25 +1,25 @@
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchIcon } from "../../assets/icons";
 import MainCategory from "../../components/MainCategory";
 import SingleProduct from "../../components/SingleProduct";
 import { useGlobalContext } from "../../context/GlobalContext";
 import { mainCategories } from "../../data/categories";
 import products from "../../data/products";
-import { arrayOfArrays } from "../../utils/database/groupProducts";
 
 function Products() {
   const router = useRouter();
-  const mainRef = useRef(null);
-  const [nextProductGroup, setNextProductGroup] = useState(1);
   const {
     allProducts,
+    filteredProducts,
+    nextProductGroup,
     productGroups,
     renderedProducts,
     updateRenderedProducts,
   } = useGlobalContext();
 
   // if no product has been fetched
+  // to do - set loading and fetch products using api route
   useEffect(() => {
     if (allProducts.length < 1) {
       router.push("/");
@@ -35,14 +35,18 @@ function Products() {
         window.scrollY + window.innerHeight >=
         scrollHeight + offsetTop - 20
       ) {
+        // Do nothing if the last array group has been rendered
+        if (nextProductGroup >= productGroups.length) {
+          window.removeEventListener("scroll", handleScroll);
+          return;
+        }
         updateRenderedProducts(productGroups[nextProductGroup]);
-        setNextProductGroup(nextProductGroup + 1);
       }
     }
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [nextProductGroup]);
+  }, [renderedProducts, filteredProducts]);
 
   return (
     <main className="mb-36 mt-10 sm:mt-20" id="main">
@@ -96,7 +100,7 @@ function Products() {
 
             {/* reset button */}
             <button className="btn2 mb-10 px-6 py-2 text-sm lg:text-base">
-              Reset filters
+              Reset filter(s)
             </button>
           </div>
 
@@ -104,7 +108,7 @@ function Products() {
           <div className="">
             <div className="mb-6 items-center gap-1 sm:flex">
               <p className="mb-3 sm:mb-0">
-                <span className="font-semibold">{allProducts.length}</span>{" "}
+                <span className="font-semibold">{filteredProducts.length}</span>{" "}
                 items found
               </p>
               <hr className="hidden grow border sm:block" />

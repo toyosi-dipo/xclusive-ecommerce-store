@@ -110,10 +110,10 @@ function SingleProduct({
             </h4>
 
             {/* price of product */}
-            <h4 className="flex gap-2 text-lg font-bold text-secondary2">
+            <h4 className="flex items-baseline gap-2 text-lg font-bold text-secondary2">
               {formatPrice(price, discount)}
               {discount && (
-                <span className="font-medium text-black/50 line-through decoration-black/50">
+                <span className="text-sm font-medium text-black/50 line-through decoration-black/50">
                   {formatPrice(price)}
                 </span>
               )}
