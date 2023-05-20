@@ -2,9 +2,14 @@ import Link from "next/link";
 import { CartIcon, HeartIcon, SearchIcon } from "../assets/icons";
 import NavLink from "../components/NavLink";
 import { useCartContext } from "../context/CartContext";
+import { useGlobalContext } from "../context/GlobalContext";
 import navLinks from "../data/navlinks";
 
 function NavBar() {
+  const {
+    filters: { search },
+    handleSearch,
+  } = useGlobalContext();
   const { wishlist, cart } = useCartContext();
   return (
     <>
@@ -26,7 +31,9 @@ function NavBar() {
             {/* Search container */}
             <div className="flex items-center gap-2 rounded bg-secondary px-3 text-xs">
               <input
-                type="text"
+                type="search"
+                value={search}
+                onChange={handleSearch}
                 className="bg-transparent px-1 py-3 focus:outline-none"
                 placeholder="What are you looking for?"
               />

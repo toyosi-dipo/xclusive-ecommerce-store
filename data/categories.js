@@ -7,6 +7,7 @@ import {
 } from "../assets/icons";
 
 export const mainCategories = [
+  { title: "All" },
   { title: "Women Fashion" },
   { title: "Men Fashion" },
   { title: "Electronics" },

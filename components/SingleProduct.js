@@ -77,7 +77,7 @@ function SingleProduct({
       {/* discount */}
       {discount && (
         <p className="absolute left-3 top-3 rounded bg-secondary2 px-3 py-1 text-xs text-text">
-          {`-${discount * 100}%`}
+          {`-${parseInt(discount * 100)}%`}
         </p>
       )}
       {newProduct && (

@@ -7,5 +7,8 @@ export function removeFromInventory(inventory, productId) {
 }
 
 export function filterInventoryCategory(inventory, query) {
+  if (query === "all") {
+    return inventory;
+  }
   return inventory.filter((product) => product.categories.includes(query));
 }
