@@ -1,5 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useGlobalContext } from "../context/GlobalContext";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowRightIcon,
   ArrowUpIcon,
@@ -8,8 +11,6 @@ import {
   SearchIcon,
   SecuredIcon,
 } from "../assets/icons";
-import FlashSalesTimerDigit from "../components/FlashSalesTimerDigit";
-import LtdOfferTimerDigit from "../components/LtdOfferTimerDigit";
 import MainCategory from "../components/MainCategory";
 import SectionTag from "../components/SectionTag";
 import SingleProduct from "../components/SingleProduct";
@@ -17,8 +18,8 @@ import SubCategory from "../components/SubCategory";
 import { mainCategories, subCategories } from "../data/categories";
 import products from "../data/products";
 import Error from "next/error";
-import { useEffect } from "react";
-import { useGlobalContext } from "../context/GlobalContext";
+import FlashSalesTimer from "../components/FlashSalesTimer";
+import LtdOfferTimer from "../components/LtdOfferTimer";
 // import {getAllProducts} from "../utils/getProducts";
 
 // START FROM cart PAGE NEXT
@@ -38,7 +39,13 @@ export async function getServerSideProps(params) {
 }
 
 export default function Home({ allProducts, isError }) {
-  const { setAllProducts } = useGlobalContext();
+  const pathname = usePathname();
+  const router = useRouter();
+  const {
+    setAllProducts,
+    handleSearch,
+    filters: { search },
+  } = useGlobalContext();
 
   useEffect(() => {
     if (!isError) {
@@ -61,6 +68,13 @@ export default function Home({ allProducts, isError }) {
               <div className="mb-4 flex items-center gap-2 rounded bg-secondary px-3 text-xs sm:mb-5 sm:text-sm lg:hidden">
                 <input
                   type="text"
+                  value={search}
+                  onChange={(e) => {
+                    handleSearch(e);
+                    if (pathname !== "/products") {
+                      router.push("/products");
+                    }
+                  }}
                   className="grow bg-transparent px-1 py-3 focus:outline-none md:max-w-[8rem]"
                   placeholder="What are you looking for?"
                 />
@@ -70,7 +84,7 @@ export default function Home({ allProducts, isError }) {
               {/* categories */}
               <ul className="flex justify-between gap-2 overflow-x-auto md:block md:space-y-4 lg:w-56">
                 {mainCategories.map((category, index) => (
-                  <MainCategory key={index} {...category} />
+                  <MainCategory key={index} index={index} {...category} />
                 ))}
               </ul>
             </div>
@@ -127,17 +141,7 @@ export default function Home({ allProducts, isError }) {
               <h3>Flash Sales</h3>
               {/* to do - countdown timer */}
               {/* Countdown timer */}
-              <div className="mt-5 flex items-end gap-4">
-                <FlashSalesTimerDigit parameter={"Days"} value={"00"} />
-                <p className="text-3xl font-bold text-secondary2">:</p>
-                <FlashSalesTimerDigit parameter={"Hours"} value={"00"} />
-                <p className="text-3xl font-bold text-secondary2">:</p>
-                {/* minutes */}
-                <FlashSalesTimerDigit parameter={"Minutes"} value={"00"} />
-                <p className="text-3xl font-bold text-secondary2">:</p>
-                {/* seconds */}
-                <FlashSalesTimerDigit parameter={"Seconds"} value={"00"} />
-              </div>
+              <FlashSalesTimer />
             </div>
 
             {/* Flash sales products */}
@@ -214,12 +218,7 @@ export default function Home({ allProducts, isError }) {
                 </h2>
 
                 {/* Countdown timer */}
-                <div className="mb-10 mt-5 flex items-end gap-4">
-                  <LtdOfferTimerDigit parameter={"Days"} value={"00"} />
-                  <LtdOfferTimerDigit parameter={"Hours"} value={"00"} />
-                  <LtdOfferTimerDigit parameter={"Minutes"} value={"00"} />
-                  <LtdOfferTimerDigit parameter={"Seconds"} value={"00"} />
-                </div>
+                <LtdOfferTimer />
 
                 {/* go to single product */}
                 <Link

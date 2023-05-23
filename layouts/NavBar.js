@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { CartIcon, HeartIcon, SearchIcon } from "../assets/icons";
 import NavLink from "../components/NavLink";
 import { useCartContext } from "../context/CartContext";
@@ -6,6 +7,8 @@ import { useGlobalContext } from "../context/GlobalContext";
 import navLinks from "../data/navlinks";
 
 function NavBar() {
+  const pathname = usePathname();
+  const router = useRouter();
   const {
     filters: { search },
     handleSearch,
@@ -33,7 +36,12 @@ function NavBar() {
               <input
                 type="search"
                 value={search}
-                onChange={handleSearch}
+                onChange={(e) => {
+                  handleSearch(e);
+                  if (pathname !== "/products") {
+                    router.push("/products");
+                  }
+                }}
                 className="bg-transparent px-1 py-3 focus:outline-none"
                 placeholder="What are you looking for?"
               />

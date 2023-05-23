@@ -17,6 +17,7 @@ const GlobalContext = createContext();
 
 const initialState = {
   nextProductGroup: 1,
+  activeCategory: 0,
   allProducts: [],
   filters: { priceLimit: 0, category: "all", search: "" },
   filteredProducts: [],
@@ -36,8 +37,8 @@ function GlobalProvider({ children }) {
     dispatch({ type: UPDATE_RENDERED_PRODUCTS, payload: productGroup });
   }
 
-  function setProductsCategory(category) {
-    dispatch({ type: SET_PRODUCT_CATEGORY, payload: category });
+  function setProductsCategory(category, index) {
+    dispatch({ type: SET_PRODUCT_CATEGORY, payload: { category, index } });
   }
 
   function setPriceLimit(e) {

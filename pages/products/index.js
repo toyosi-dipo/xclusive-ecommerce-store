@@ -11,7 +11,6 @@ import maxValue from "../../utils/maxValue";
 
 function Products() {
   const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState(0);
   const {
     allProducts,
     filteredProducts,
@@ -86,13 +85,7 @@ function Products() {
               <h4 className="mb-1 font-semibold md:mb-3">Categories</h4>
               <ul className="flex justify-between gap-2 overflow-x-auto md:block md:space-y-4">
                 {mainCategories.map((category, index) => (
-                  <MainCategory
-                    key={index}
-                    activeCategory={activeCategory}
-                    setActiveCategory={setActiveCategory}
-                    index={index}
-                    {...category}
-                  />
+                  <MainCategory key={index} index={index} {...category} />
                 ))}
               </ul>
             </div>
@@ -124,9 +117,7 @@ function Products() {
             {/* reset button */}
             <button
               className="btn2 mb-10 px-6 py-2 text-sm lg:text-base"
-              onClick={() => {
-                resetFilters(), setActiveCategory(0);
-              }}
+              onClick={resetFilters}
             >
               Reset filter(s)
             </button>

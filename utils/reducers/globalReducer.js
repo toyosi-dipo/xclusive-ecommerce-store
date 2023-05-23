@@ -39,7 +39,12 @@ function reducer(state, action) {
     case SET_PRODUCT_CATEGORY: {
       return {
         ...state,
-        filters: { ...state.filters, category: action.payload },
+        activeCategory: action.payload.index,
+        filters: {
+          ...state.filters,
+          search: "",
+          category: action.payload.category,
+        },
       };
     }
 
@@ -52,7 +57,8 @@ function reducer(state, action) {
     case SET_SEARCH_QUERY: {
       return {
         ...state,
-        filters: { ...state.filters, search: action.payload },
+        activeCategory: 0,
+        filters: { ...state.filters, category: "all", search: action.payload },
       };
     }
 
@@ -133,6 +139,7 @@ function reducer(state, action) {
     case RESET_FILTERS: {
       const productGroups = arrayOfArrays(state.allProducts, 21);
       return {
+        activeCategory: 0,
         allProducts: state.allProducts,
         nextProductGroup: 1,
         filteredProducts: state.allProducts,
