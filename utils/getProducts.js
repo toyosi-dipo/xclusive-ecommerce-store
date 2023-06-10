@@ -9,7 +9,6 @@ export async function getAllProducts() {
 
   try {
     allProducts = await productsCollection.find({}).toArray();
-    product = { ...product, _id: product._id.toString() };
     allProducts = allProducts.map((product) => ({
       ...product,
       _id: product._id.toString(),

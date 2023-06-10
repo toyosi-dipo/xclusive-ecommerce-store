@@ -1,6 +1,9 @@
+import axios from "axios";
+import Error from "next/error";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SearchIcon } from "../../assets/icons";
+import Loading from "../../components/Loading";
 import MainCategory from "../../components/MainCategory";
 import SingleProduct from "../../components/SingleProduct";
 import { useGlobalContext } from "../../context/GlobalContext";
@@ -10,6 +13,8 @@ import formatPrice from "../../utils/formatPrice";
 import maxValue from "../../utils/maxValue";
 
 function Products() {
+  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const router = useRouter();
   const {
     allProducts,
@@ -21,6 +26,7 @@ function Products() {
     filters: { priceLimit, search },
     renderedProducts,
     resetFilters,
+    setAllProducts,
     setPriceLimit,
     sort_by,
     updateRenderedProducts,
@@ -28,18 +34,31 @@ function Products() {
 
   const max = maxValue(allProducts);
 
-  // if no product has been fetched
-  // to do - set loading and fetch products using api route
+  // if no product has been fetched - not going to home pag at all
   useEffect(() => {
     if (allProducts.length < 1) {
-      router.push("/");
+      async function fetchProducts() {
+        setLoading(true);
+        try {
+          const response = await axios("/api/fetch-products");
+          setAllProducts(response.data);
+        } catch (error) {
+          console.log(error.message);
+          setIsError(true);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      fetchProducts();
     }
   }, []);
 
   // scroll handler
   useEffect(() => {
     function handleScroll() {
-      const { scrollHeight, offsetTop } = document.getElementById("main");
+      const main = document.getElementById("main");
+      const { scrollHeight, offsetTop } = main;
 
       if (
         window.scrollY + window.innerHeight >=
@@ -57,6 +76,21 @@ function Products() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [renderedProducts, filteredProducts]);
+
+  if (loading) {
+    return (
+      <main
+        className="grid h-[calc(100vh-6rem)] place-items-center bg-gray-50"
+        id="main"
+      >
+        <Loading />
+      </main>
+    );
+  }
+
+  if (isError) {
+    return <Error />;
+  }
 
   return (
     <main className="mb-36 mt-10 sm:mt-20" id="main">

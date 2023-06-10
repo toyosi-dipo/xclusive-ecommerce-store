@@ -174,7 +174,6 @@ function SingleProduct({
               ? "pointer-events-auto opacity-100"
               : "pointer-events-none opacity-0"
           }`}
-          onClick={() => addToCart(id)}
         >
           <button
             className="h-12 rounded bg-black px-3  text-2xl font-bold duration-300 hover:opacity-70 disabled:cursor-not-allowed disabled:opacity-30"
@@ -187,7 +186,7 @@ function SingleProduct({
             {isInCart?.cartQuantity}
           </p>
           <button
-            className="h-12 rounded  bg-black px-3 text-2xl font-bold  duration-300 hover:opacity-70"
+            className="h-12 rounded bg-black px-3 text-2xl font-bold  duration-300 hover:opacity-70"
             onClick={() => cartItemQuantityHandler(id, "increase")}
           >
             +

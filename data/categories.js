@@ -18,6 +18,6 @@ export const subCategories = [
   { title: "Phones", icon: <PhoneCategoryIcon /> },
   { title: "Laptops", icon: <ComputerCategoryIcon /> },
   { title: "watches", icon: <SmartWatchCategoryIcon /> },
-  { title: "Cameras", icon: <CameraCategoryIcon /> },
+  { title: "Camera", icon: <CameraCategoryIcon /> },
   { title: "Headphones", icon: <HeadPhoneCategoryIcon /> },
 ];

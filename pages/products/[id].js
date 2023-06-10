@@ -1,49 +1,75 @@
 import Error from "next/error";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   HeartIcon,
   StarEmptyIcon,
   StarFullyFilledIcon,
   StarHalfFilledIcon,
 } from "../../assets/icons";
+import { useCartContext } from "../../context/CartContext";
+import { useGlobalContext } from "../../context/GlobalContext";
 import products from "../../data/products";
 import formatPrice from "../../utils/formatPrice";
-import { getSingleProduct } from "../../utils/getProducts";
+import { getAllProducts } from "../../utils/getProducts";
 
 export async function getServerSideProps({ params }) {
   const productId = params.id;
-  let isError = false;
-  let thisProduct;
+  let isError = false,
+    allFetchedProducts = [],
+    product = {};
 
   try {
-    thisProduct = await getSingleProduct(productId);
+    allFetchedProducts = await getAllProducts();
+    product = allFetchedProducts.find((product) => product._id === productId);
   } catch (error) {
     console.log(error.message);
     isError = error.message;
   }
 
-  // making sure all product's properties can be serialized
-  let tempProduct = {};
-  if (thisProduct) {
-    for (const key in thisProduct) {
-      if (thisProduct[key]) {
-        tempProduct[key] = thisProduct[key];
-      }
-    }
-  }
-
   return {
-    props: { tempProduct, isError },
+    props: { allFetchedProducts, product, isError },
   };
 }
 
-function SingleProductPage({ tempProduct, isError }) {
+function SingleProductPage({ allFetchedProducts, product, isError }) {
   const [tempQuantity, setTempQuantity] = useState(1);
+  const { allProducts, setAllProducts } = useGlobalContext();
+  const {
+    cart,
+    wishlist,
+    addToCart,
+    wishlistHandler,
+    cartItemQuantityHandler,
+  } = useCartContext();
 
   if (isError) {
     return <Error />;
   }
+
+  const isInCart = cart.find((prod) => prod._id === product._id);
+  const isInWishlist = wishlist.find((prod) => prod._id === product._id);
+
+  const handleQuantityToCart = (id, operation) => {
+    if (isInCart) {
+      cartItemQuantityHandler(id, operation);
+    } else {
+      if (operation === "increase") {
+        setTempQuantity(tempQuantity + 1);
+      } else {
+        setTempQuantity((tempQuantity) => {
+          console.log(tempQuantity);
+          return tempQuantity > 1 ? tempQuantity - 1 : tempQuantity;
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!isError && allProducts.length < 1) {
+      setAllProducts(allFetchedProducts);
+    }
+  }, []);
 
   const {
     _id: id,
@@ -54,7 +80,7 @@ function SingleProductPage({ tempProduct, isError }) {
     imageUrl,
     description,
     discount,
-  } = tempProduct;
+  } = product;
 
   return (
     <main className="mb-36 mt-10 sm:mt-20">
@@ -88,21 +114,21 @@ function SingleProductPage({ tempProduct, isError }) {
                 {Array.from({ length: 5 }, (_, index) => {
                   if (rating >= index + 1) {
                     return (
-                      <span>
+                      <span key={index}>
                         <StarFullyFilledIcon />
                       </span>
                     );
                   }
                   if (rating < index + 1 && rating >= index + 0.5) {
                     return (
-                      <span>
+                      <span key={index}>
                         <StarHalfFilledIcon />
                       </span>
                     );
                   }
                   if (rating < index + 1) {
                     return (
-                      <span>
+                      <span key={index}>
                         <StarEmptyIcon />
                       </span>
                     );
@@ -114,7 +140,6 @@ function SingleProductPage({ tempProduct, isError }) {
               <span>|</span> <span className="text-button1">In stock</span>
             </div>
 
-            {/* to do - use international number format */}
             <p className="mb-6 flex flex-wrap gap-4 text-2xl">
               {formatPrice(price, discount)}
               {discount && (
@@ -134,36 +159,47 @@ function SingleProductPage({ tempProduct, isError }) {
                 {/* reduce button */}
                 <button
                   type="button"
-                  className="flex h-11 w-10 items-center justify-center rounded-l border border-black/50 text-2xl duration-300 hover:border-button2 hover:bg-button2 hover:text-text"
+                  className="flex h-11 w-10 items-center justify-center rounded-l border border-black/50 text-2xl duration-300 hover:border-button2 hover:bg-button2 hover:text-text disabled:cursor-not-allowed disabled:opacity-30"
+                  // disabled={isInCart ? false : true}
+                  onClick={() => handleQuantityToCart(id, "decrease")}
                 >
                   -
                 </button>
 
                 {/* quantity */}
                 <p className="flex h-11 items-center justify-center border-y border-black/50 px-9 text-xl">
-                  {tempQuantity}
+                  {isInCart ? isInCart.cartQuantity : tempQuantity}
                 </p>
 
                 {/* increase button */}
                 <button
                   type="button"
                   className="flex h-11 w-10 items-center justify-center rounded-r border border-button2 bg-button2 text-2xl text-text duration-300 hover:border-black/50 hover:bg-transparent hover:text-inherit"
+                  onClick={() => handleQuantityToCart(id, "increase")}
                 >
                   +
                 </button>
               </div>
 
               {/* add to cart button */}
-              <button className="btn2 py-o flex h-11 items-center">
+              <button
+                className="btn2 py-o flex h-11 items-center disabled:cursor-not-allowed disabled:opacity-50"
+                title={isInCart ? "Added to cart" : ""}
+                disabled={isInCart ? true : false}
+                onClick={() => addToCart(id, tempQuantity)}
+              >
                 Add to cart
               </button>
 
               {/* add to wishlist */}
               <button
-                className="h-11 rounded border border-black/50 fill-white px-2 text-3xl duration-300 hover:bg-black"
-                title="Add to wishlist"
+                className="h-11 rounded border border-black/50 fill-white px-2 text-3xl duration-300 hover:bg-black/10"
+                title={
+                  isInWishlist ? "Remove from wishlist" : "Add to wishlist"
+                }
+                onClick={() => wishlistHandler(id)}
               >
-                <HeartIcon />
+                <HeartIcon className={isInWishlist ? "fill-black" : ""} />
               </button>
             </div>
           </div>

@@ -4,6 +4,9 @@ import { useEffect } from "react";
 
 function FlashSalesTimer() {
   const [countdown] = useCountdownTimer(4);
+  if (countdown[4] < 1) {
+    return <h4 className="">Flash sales has expired</h4>;
+  }
 
   return (
     <div className="mt-5 flex items-end gap-4">

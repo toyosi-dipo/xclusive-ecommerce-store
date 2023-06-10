@@ -38,7 +38,9 @@ function reducer(state, action) {
     } else {
       const tempCart = state.cart.map((product) => {
         if (product._id === action.payload.productId) {
-          return { ...product, cartQuantity: product.cartQuantity - 1 };
+          const cartQuantity =
+            product.cartQuantity < 2 ? 1 : product.cartQuantity - 1;
+          return { ...product, cartQuantity };
         }
         return product;
       });
@@ -81,7 +83,7 @@ function reducer(state, action) {
     };
   }
 
-  throw new Error("NO MATCHING ACTION!!!");
+  throw new Error(`NO MATCHING ACTION TYPE: ${action.type}`);
 }
 
 export default reducer;

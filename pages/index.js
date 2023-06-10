@@ -16,25 +16,21 @@ import SectionTag from "../components/SectionTag";
 import SingleProduct from "../components/SingleProduct";
 import SubCategory from "../components/SubCategory";
 import { mainCategories, subCategories } from "../data/categories";
-import products from "../data/products";
 import Error from "next/error";
 import FlashSalesTimer from "../components/FlashSalesTimer";
 import LtdOfferTimer from "../components/LtdOfferTimer";
-// import {getAllProducts} from "../utils/getProducts";
-
-// START FROM cart PAGE NEXT
+import { getAllProducts } from "../utils/getProducts";
 
 export async function getServerSideProps(params) {
   let allProducts;
   let isError = false;
-  //   try {
-  //     allProducts = await getAllProducts();
-  //   } catch (error) {
-  //     console.log(error.message);
-  // isError = error.message;
-  //   }
+  try {
+    allProducts = await getAllProducts();
+  } catch (error) {
+    console.log(error.message);
+    isError = error.message;
+  }
 
-  allProducts = products;
   return { props: { allProducts, isError } };
 }
 
@@ -43,6 +39,7 @@ export default function Home({ allProducts, isError }) {
   const router = useRouter();
   const {
     setAllProducts,
+    setProductsCategory,
     handleSearch,
     filters: { search },
   } = useGlobalContext();
@@ -107,9 +104,10 @@ export default function Home({ allProducts, isError }) {
                 <h3 className="text-4xl font-semibold leading-tight lg:text-5xl">
                   Up to 10% <br /> off Voucher
                 </h3>
-                {/* to do - link to single product directly */}
+
                 <Link
                   href={"/products"}
+                  onClick={() => setProductsCategory("iphone 14", 3)}
                   className="inline-flex items-center gap-2 hover:text-text1"
                 >
                   <span className="border-b duration-200 hover:border-b-transparent">
@@ -139,7 +137,6 @@ export default function Home({ allProducts, isError }) {
             {/* Heading and countdown timer container */}
             <div className="heading-container">
               <h3>Flash Sales</h3>
-              {/* to do - countdown timer */}
               {/* Countdown timer */}
               <FlashSalesTimer />
             </div>
@@ -222,7 +219,7 @@ export default function Home({ allProducts, isError }) {
 
                 {/* go to single product */}
                 <Link
-                  href={"/products"}
+                  href={"/products/645a4a540e2012f0d126f3c6"}
                   className="inline-block rounded bg-button1 px-12 py-4 text-text duration-300 hover:bg-hoverButton1"
                 >
                   Buy Now!
@@ -290,7 +287,7 @@ export default function Home({ allProducts, isError }) {
                     Black and White version of the PS5 coming out on sale.
                   </p>
                   <Link
-                    href={"/products"}
+                    href={"/products/645a4a540e2012f0d126f3b8"}
                     className="inline-block border-b duration-200 hover:border-b-transparent hover:text-text1"
                   >
                     Shop Now
@@ -318,6 +315,7 @@ export default function Home({ allProducts, isError }) {
                     </p>
                     <Link
                       href={"/products"}
+                      onClick={() => setProductsCategory("women", 1)}
                       className="inline-block border-b duration-200 hover:border-b-transparent hover:text-text1"
                     >
                       Shop Now
@@ -340,7 +338,7 @@ export default function Home({ allProducts, isError }) {
                       </h4>
                       <p className="text-sm">Amazon wireless speakers </p>
                       <Link
-                        href={"/products"}
+                        href={"/products/645a4a540e2012f0d126f3cc"}
                         className="inline-block border-b duration-200 hover:border-b-transparent hover:text-text1"
                       >
                         Shop Now
@@ -361,7 +359,7 @@ export default function Home({ allProducts, isError }) {
                       </h4>
                       <p className="text-sm">GUCCI INTENSE OUD EDP </p>
                       <Link
-                        href={"/products"}
+                        href={"/products/645a4a540e2012f0d126f3e3"}
                         className="inline-block border-b duration-200 hover:border-b-transparent hover:text-text1"
                       >
                         Shop Now

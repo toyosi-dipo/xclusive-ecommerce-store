@@ -3,6 +3,11 @@ import LtdOfferTimerDigit from "./LtdOfferTimerDigit";
 
 function LtdOfferTimer() {
   const [countdown] = useCountdownTimer(6, 12, 0, 45);
+  console.log();
+
+  if (countdown[4] < 1) {
+    return <h4 className="">Limited offer time has elapsed</h4>;
+  }
   return (
     <div className="mb-10 mt-5 flex items-end gap-4">
       <LtdOfferTimerDigit parameter={"Days"} value={countdown[0]} />

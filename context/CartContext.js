@@ -23,12 +23,12 @@ function CartProvider({ children }) {
   const { allProducts } = useGlobalContext();
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function addToCart(productId) {
+  function addToCart(productId, tempQuantity = 1) {
     const tempProduct = findInInventory(allProducts, productId);
     removeFromWishlist(productId);
     dispatch({
       type: ADD_TO_CART,
-      payload: { ...tempProduct, cartQuantity: 1 },
+      payload: { ...tempProduct, cartQuantity: tempQuantity },
     });
   }
 
